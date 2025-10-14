@@ -4,7 +4,7 @@
 import discord
 from discord import app_commands
 
-TOKEN = 'MTQyNzUyNzc1MzE1NDE3MTAyMA.GOrQcs.JF_0mon0ggzsq9tb30C5iDmfM4bJLIgAP-RDiU'
+TOKEN = 'REPLACE WITH THE TOKEN FROM THE SERVER'
 
 intents = discord.Intents.default()
 intents.message_content = True
