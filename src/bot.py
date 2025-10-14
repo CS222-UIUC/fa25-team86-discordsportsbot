@@ -4,7 +4,7 @@
 import discord
 from discord import app_commands
 
-TOKEN = 'REPLACE WITH THE TOKEN FROM THE SERVER'
+TOKEN = 'REPLACE WITH THE TOKEN' #i put the token in the quick access channel of the server
 
 intents = discord.Intents.default()
 intents.message_content = True
