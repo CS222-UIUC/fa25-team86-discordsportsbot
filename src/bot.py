@@ -4,14 +4,14 @@
 import discord
 from discord import app_commands
 
-TOKEN = 'REPLACE WITH THE TOKEN' #i put the token in the quick access channel of the server
+TOKEN = 'REPLACE WITH THE TOKEN' #i put the token in the quick access channel of the server - Rishi
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-# This is temporary (borrowed) for testing if im doing any of this right
+# This is temporary (borrowed) for testing if im doing any of this right - Rishi
 @client.event
 async def on_ready():
     print('We have successfully loggged in as {0.user}'.format(client))
