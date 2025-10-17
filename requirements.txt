@@ -4,6 +4,7 @@ python-dotenv==1.0.0
 aiohttp==3.8.4
 SQLAlchemy==2.0.20
 aiosqlite==0.17.0
+mysql-connector-python==9.4.0 #probably need this for SQLAlchemy, putting this here just in case
 
 #Testing (I just put whatever I found relevant and whats on the doc - Rishi)
 pytest==7.4.0
