@@ -3,11 +3,12 @@ import aiohttp
 import asyncio
 import time
 import json
+import DataClass
 
 # SPI_Football_key is required if you want to use it. Default Sports_DB_Key is 3. (I should probably be able to input keys but for now its fine for MVP)
 
 API_FOOTBALL_KEY = "replace with your api key"
-SPORTS_DB_KEY = "replace with your own api key"
+SPORTS_DB_KEY = "3"
 
 SPORTS_DB_URL = f"https://www.thesportsdb.com/api/v1/json/{SPORTS_DB_KEY}"
 
@@ -22,22 +23,34 @@ class SportsAPIClient:
     async def get_player(self, player):
         # check for either apifootball/sports_db/or both? for now just using sports_DB
         async with self.session.get(f"{SPORTS_DB_URL}/searchplayers.php?p={player}") as response: 
-            player_info = await response.json()
-        
-        # format json so only necessary information is sent and return        
-        # TODO needs to only parse to return data we want either via parsing here/function/constructor 
-                
+            response_object = await response.json()
+            # TODO Need to add error handling
+            
+            player_list = response_object.get("player")
+            
+            # format json so only necessary information is sent and return       
+            player_info = []
+            
+            for potential_player in player_list:
+                player_info.append(DataClass.Player().from_api_json(potential_player))
+            
         return player_info
     
     async def get_team(self, team):
         
         # check for either apifootball/sports_db or both? for now just using sports_DB
         async with self.session.get(f"{SPORTS_DB_URL}/searchteams.php?t={team}") as response:
-            team_info = await response.json()
-        
-        # format json so only necessary information is sent 
-        # TODO needs to only parse to return data we want either via parsing here/function/constructor  
-        
+            response_object = await response.json()
+            # TODO Need to add error handling
+            
+            team_list = response_object.get("teams")
+            
+            #format json so only necessary information is sent and return
+            team_info = []            
+            
+            for potential_team in team_list:
+                team_info.append(DataClass.Player().from_api_json(potential_team))
+            
         return team_info
     
 
@@ -52,4 +65,5 @@ class SportsAPIClient:
 #         team_info = await curr_session.get_team(test_team)
 #         print(player_info)
 #         print(team_info)
+        
 # asyncio.run(main())
