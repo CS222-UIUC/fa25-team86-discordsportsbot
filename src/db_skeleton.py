@@ -1,12 +1,25 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, UniqueConstraint
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
+
+# Use SQLite for local testing, the same DB the bot will connect to
+DATABASE_URL = "sqlite+aiosqlite:///./sportsbot.db"
+
+# Create the async engine and session factory
+engine = create_async_engine(DATABASE_URL, echo=False, future=True)
+SessionLocal = sessionmaker(
+    bind=engine, class_=AsyncSession, expire_on_commit=False
+)
 
 #Base class for SQLAlchemy
 #SQLAlchemy is somewhat new to me so if I slip up and put a VARCHAR somewhere I shouldn't you're allowed to yell at me 
 #but be nice about it please
 Base = declarative_base()
 
-### ------------------------------------------------------------ FOOTBALL DATA ------------------------------------------------------------------------------------
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 class Team(Base):
     __tablename__ = "teams"
     id = Column(Integer, primary_key=True)  #APIs we are pulling from presumably have each team mapped to a unique ID. 
