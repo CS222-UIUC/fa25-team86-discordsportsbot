@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 # Import database session and initialization utilities
-from db_skeleton import SessionLocal, init_db, Team, Player, Match, PlayerStat
+from db_skeleton import SessionLocal, init_db, Team, Player, Match, PlayerStat, Subscription
 
 #TODO: Need to add env folder
 
@@ -106,5 +106,39 @@ async def addplayer(ctx, name: str, team_name: str):
     except Exception as e:
         await ctx.send(f"Failed to add player: {e}")
         print(f"Error in addplayer: {e}")
+
+@bot.command()
+async def subscribe(ctx, *, team_name: str):
+    """Subscribes the user to a team for updates."""
+    try:
+        async with SessionLocal() as session:
+            # Find the team the user mentioned
+            team_result = await session.execute(select(Team).where(Team.name.ilike(f"%{team_name}%")))
+            team = team_result.scalar_one_or_none()
+
+            if not team:
+                await ctx.send(f"Sorry, I couldn't find a team named '{team_name}'.")
+                return
+
+            # Check if the user is already subscribed to this team
+            user_id = ctx.author.id
+            sub_result = await session.execute(
+                select(Subscription).where(Subscription.user_id == user_id, Subscription.team_id == team.id)
+            )
+
+            if sub_result.scalar_one_or_none():
+                await ctx.send(f"You are already subscribed to {team.name}!")
+                return
+
+            # Create and save the new subscription
+            new_subscription = Subscription(user_id=user_id, team_id=team.id)
+            session.add(new_subscription)
+            await session.commit()
+
+            await ctx.send(f"You are now subscribed to updates for {team.name}!")
+
+    except Exception as e:
+        await ctx.send("An error occurred while trying to subscribe. Please try again.")
+        print(f"Error in !subscribe: {e}")
 
 bot.run(TOKEN)
