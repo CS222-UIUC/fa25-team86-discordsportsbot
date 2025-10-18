@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, BigInteger
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
 
 # Use SQLite for local testing, the same DB the bot will connect to
 DATABASE_URL = "sqlite+aiosqlite:///./sportsbot.db"
@@ -139,10 +139,6 @@ class TeamSubscription(Base):
     __table_args__ = (UniqueConstraint('member_id', 'team_id', name='_member_team_uc'),) #no duplicate subs
 
 
-class Subscription(Base):
-    __tablename__ = "subscriptions"
-    id = Column(Integer, primary_key=True)
-    user_id = Column(BigInteger, nullable=False) # Stores the Discord user's unique ID
-    team_id = Column(Integer, ForeignKey('teams.id'), nullable=False) # Links to the team's ID
 
-    team = relationship("Team")
+
+
