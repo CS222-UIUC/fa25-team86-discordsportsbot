@@ -1,22 +1,16 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from db_skeleton import SessionLocal, init_db, Team, Player, Match, PlayerStat
+from db_skeleton import (
+    SessionLocal, Base, engine,
+    Team, Player, Match, PlayerStat,
+    Member, PlayerSubscription, TeamSubscription
+)
 
 async def initialize_database():
-    """Initialize the database and test the connection."""
+    """Initialize database connection without creating tables."""
     init_status = {"success": True, "messages": []}
     
     try:
-        # Initialize all DB tables (if not already created)
-        await init_db()
-        init_status["messages"].append("Database tables initialized.")
-    except Exception as e:
-        init_status["success"] = False
-        init_status["messages"].append(f"Database initialization failed: {e}")
-        return init_status
-    
-    try:
-        # Test DB connection by running a simple SELECT query
         async with SessionLocal() as session:
             result = await session.execute(select(1))
             init_status["messages"].append("Database connection established.")
@@ -26,8 +20,23 @@ async def initialize_database():
     
     return init_status
 
+async def ensure_tables(*tables):
+    """Initialize specific tables in the database."""
+    try:
+        async with engine.begin() as conn:
+            # Create only the specified tables if they don't exist
+            for table in tables:
+                await conn.run_sync(lambda: table.__table__.create(checkfirst=True))
+        return {"success": True, "message": f"Tables initialized: {[t.__tablename__ for t in tables]}"}
+    except Exception as e:
+        return {"success": False, "message": f"Failed to initialize tables: {e}"}
+
 async def test_database():
     """Test database connectivity by inserting and fetching sample data."""
+    # Ensure the Team table exists before testing
+    table_init = await ensure_tables(Team)
+    if not table_init["success"]:
+        return {"success": False, "teams": [], "message": table_init["message"]}
     try:
         async with SessionLocal() as session:
             # Insert a dummy team record
@@ -59,6 +68,11 @@ async def test_database():
 
 async def add_player_to_team(name: str, team_name: str):
     """Add a new player to an existing team."""
+    # Ensure both Team and Player tables exist
+    table_init = await ensure_tables(Team, Player)
+    if not table_init["success"]:
+        return {"success": False, "message": table_init["message"]}
+    
     try:
         async with SessionLocal() as session:
             # Find the team the player should belong to
