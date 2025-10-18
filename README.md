@@ -25,6 +25,3 @@ Add bot to your Discord server from: https://discord.com/oauth2/authorize?client
             Lists the players and teams to which the user is currently subscribed to
 
 Made for CS 222 Fall 2025 by Ayana, Hyunho Kim, Rishi Garhyan, and Zeeshan Khan
-
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/19BwrNgF)
-
