@@ -2,9 +2,9 @@
 
 # We definitely need these at the very least
 import os
-import discord
-from discord import app_commands
-from dotenv import load_dotenv
+import discord                      # pyright: ignore
+from discord import app_commands    # pyright: ignore
+from dotenv import load_dotenv      # pyright: ignore
 
 # TODO: Need to add env folder
 
