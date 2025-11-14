@@ -1,5 +1,11 @@
+# db_skeleton.py
+
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession  # pyright: ignore
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship  # pyright: ignore
+from sqlalchemy.orm import (
+    sessionmaker,
+    declarative_base,
+    relationship,
+)  # pyright: ignore
 from sqlalchemy import (
     Column,
     Integer,
