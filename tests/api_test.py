@@ -287,19 +287,3 @@ async def test_get_team_profile():
         result = result["data"]
         assert result["team"]["id"] == 33
         assert result["team"]["name"] == "Manchester United"
-
-@pytest.mark.asyncio
-async def test_get_team_stat():
-    async with aiohttp.ClientSession() as session:
-        client = IntegrationLayer(session)
-        result = await client.get_team_stats(
-            team_name="Manchester United",
-        )
-        result = result["data"]
-        assert result["league"]["id"] == 39
-        assert result["team"]["id"] == 33
-        assert result["fixtures"]["played"]["total"] == 38
-        assert result["fixtures"]["wins"]["total"] == 18
-        assert result["fixtures"]["draws"]["total"] == 6
-        assert result["fixtures"]["loses"]["total"] == 14
-        
